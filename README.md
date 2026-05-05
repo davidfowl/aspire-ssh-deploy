@@ -75,7 +75,19 @@ builder.AddDockerComposeEnvironment("env")
     .WithSshDeploySupport();
 ```
 
-3. Deploy:
+TypeScript AppHosts can reference the package from `aspire.config.json`, run `aspire restore`,
+and use the generated API:
+
+```typescript
+import { createBuilder } from './.modules/aspire.js';
+
+const builder = await createBuilder();
+
+await builder.addDockerComposeEnvironment('env')
+    .withSshDeploySupport();
+```
+
+4. Deploy:
 
 ```bash
 aspire deploy
@@ -89,14 +101,26 @@ See the [package README](src/Aspire.Hosting.Docker.SshDeploy/README.md) for:
 - Configuration options (`appsettings.json`, environment variables)
 - SSH authentication (key-based vs password)
 - Target host privacy settings
+- TypeScript AppHost setup
 
-## Sample Project
+## Sample Projects
 
-See `samples/DockerPipelinesSample` for a complete example:
+See `samples/DockerPipelinesSample` for a complete C# AppHost example:
 
 ```bash
 aspire run     # Run locally
 aspire deploy  # Deploy to remote host
+```
+
+See `samples/DockerPipelinesTypeScriptSample` for a TypeScript AppHost sample that uses the generated
+`Aspire.Hosting.Docker.SshDeploy` APIs against the same API and web projects:
+
+```bash
+cd samples/DockerPipelinesTypeScriptSample
+npm install
+aspire restore
+npm run build
+aspire deploy
 ```
 
 ## CI/CD with GitHub Actions

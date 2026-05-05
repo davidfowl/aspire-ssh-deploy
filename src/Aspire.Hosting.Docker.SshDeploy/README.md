@@ -19,6 +19,53 @@ aspire add docker-sshdeploy
 dotnet add package Aspire.Hosting.Docker.SshDeploy --prerelease
 ```
 
+## TypeScript AppHosts
+
+TypeScript AppHosts can use the same Docker SSH deployment APIs. Add the package to
+`aspire.config.json` and regenerate `.modules` with `aspire restore` or `aspire add`:
+
+```json
+{
+  "appHost": {
+    "path": "apphost.ts",
+    "language": "typescript/nodejs"
+  },
+  "packages": {
+    "Aspire.Hosting.Docker.SshDeploy": "<package-version>"
+  }
+}
+```
+
+For local development against this repository, reference the project file instead:
+
+```json
+{
+  "packages": {
+    "Aspire.Hosting.Docker.SshDeploy": "../src/Aspire.Hosting.Docker.SshDeploy/Aspire.Hosting.Docker.SshDeploy.csproj"
+  }
+}
+```
+
+Then use the generated API from `.modules/aspire.js`:
+
+```typescript
+import { createBuilder, PullPolicy } from './.modules/aspire.js';
+
+const builder = await createBuilder();
+
+await builder.addDockerComposeEnvironment('env')
+    .withSshDeploySupport()
+    .withImagePullPolicy(PullPolicy.Never)
+    .withPullRegistry('localhost:5001')
+    .withAppFileTransfer('./certs', 'certs')
+    .withFileTransfer('./config', '$HOME/config');
+
+await builder.build().run();
+```
+
+See `samples/DockerPipelinesTypeScriptSample` in this repository for a complete TypeScript AppHost
+sample that deploys the existing API and web projects.
+
 ## Usage Scenarios
 
 ### 1. Interactive Mode (Simplest)

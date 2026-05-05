@@ -82,6 +82,7 @@ public static class DockerPipelineExtensions
     /// 
     /// This deployment pipeline is only active when publishing the application and has no effect during local development.
     /// </remarks>
+    [AspireExport("withSshDeploySupport", Description = "Adds SSH deployment support to a Docker Compose environment resource.")]
     public static IResourceBuilder<DockerComposeEnvironmentResource> WithSshDeploySupport(
         this IResourceBuilder<DockerComposeEnvironmentResource> resourceBuilder)
     {
@@ -205,6 +206,7 @@ public static class DockerPipelineExtensions
     /// <param name="localPath">The local path (relative to AppHost directory) containing files to transfer.</param>
     /// <param name="remoteSubPath">The subdirectory within RemoteDeployPath where files will be transferred.</param>
     /// <returns>The resource builder for method chaining.</returns>
+    [AspireExport("withAppFileTransfer", Description = "Transfers files to a path relative to the remote deployment directory.")]
     public static IResourceBuilder<DockerComposeEnvironmentResource> WithAppFileTransfer(
         this IResourceBuilder<DockerComposeEnvironmentResource> builder,
         string localPath,
@@ -222,6 +224,7 @@ public static class DockerPipelineExtensions
     /// <param name="localPath">The local path (relative to AppHost directory) containing files to transfer.</param>
     /// <param name="remotePath">A parameter resource that resolves to the absolute remote destination directory.</param>
     /// <returns>The resource builder for method chaining.</returns>
+    [AspireExportIgnore(Reason = "The string overload is exported for TypeScript AppHosts. Parameter-backed remote paths are a C# convenience overload.")]
     public static IResourceBuilder<DockerComposeEnvironmentResource> WithFileTransfer(
         this IResourceBuilder<DockerComposeEnvironmentResource> builder,
         string localPath,
@@ -239,6 +242,7 @@ public static class DockerPipelineExtensions
     /// <param name="localPath">The local path (relative to AppHost directory) containing files to transfer.</param>
     /// <param name="remotePath">The absolute remote destination directory path (supports $HOME and ~ expansion).</param>
     /// <returns>The resource builder for method chaining.</returns>
+    [AspireExport("withFileTransfer", Description = "Transfers files to an absolute path on the remote deployment target.")]
     public static IResourceBuilder<DockerComposeEnvironmentResource> WithFileTransfer(
         this IResourceBuilder<DockerComposeEnvironmentResource> builder,
         string localPath,
@@ -248,6 +252,7 @@ public static class DockerPipelineExtensions
         return builder;
     }
 
+    /// <summary>
     /// Sets the image pull policy used when the deploy pipeline runs <c>docker compose up</c> on
     /// the remote. Wins over the <c>Deployment:PullPolicy</c> configuration string when both are
     /// set. Method name matches the <c>WithImagePullPolicy</c> convention used elsewhere in Aspire.
@@ -262,6 +267,7 @@ public static class DockerPipelineExtensions
     /// Takes <see cref="PullPolicy"/> rather than <c>Aspire.Hosting.ApplicationModel.ImagePullPolicy</c>
     /// because the latter does not include <c>Never</c> until Aspire 13.2.
     /// </remarks>
+    [AspireExport("withImagePullPolicy", Description = "Sets the image pull policy used for remote docker compose deployments.")]
     public static IResourceBuilder<DockerComposeEnvironmentResource> WithImagePullPolicy(
         this IResourceBuilder<DockerComposeEnvironmentResource> builder,
         PullPolicy policy)
@@ -291,6 +297,7 @@ public static class DockerPipelineExtensions
     /// Aspire always emits as <c>{registry-endpoint}/{repo}/{name}:{tag}</c>). Values without a
     /// slash and non-image variables are left untouched.
     /// </remarks>
+    [AspireExport("withPullRegistry", Description = "Rewrites generated image references so the remote Docker daemon pulls from a different registry endpoint.")]
     public static IResourceBuilder<DockerComposeEnvironmentResource> WithPullRegistry(
         this IResourceBuilder<DockerComposeEnvironmentResource> builder,
         string endpoint)
