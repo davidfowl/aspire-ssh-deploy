@@ -116,7 +116,7 @@ internal class RemoteDockerComposeService : IRemoteDockerComposeService
         _logger.LogDebug("Pruning unused Docker images");
 
         var result = await _sshConnectionManager.ExecuteCommandWithOutputAsync(
-            "docker image prune -f",
+            "docker image prune -a -f",
             cancellationToken);
 
         _logger.LogDebug(
